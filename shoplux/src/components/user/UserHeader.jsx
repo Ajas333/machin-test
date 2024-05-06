@@ -51,7 +51,7 @@ function UserHeader() {
           <button onClick={handleLogout} className="px-4 py-2 rounded-full border border-gray-300 hover:bg-gray-100 focus:outline-none">
           Logout
         </button> 
-    
+     
         </div> ) : (
         <Link to={'/user_login'}>
           <button className="px-4 py-2 rounded-full border border-gray-300 hover:bg-gray-100 focus:outline-none">
