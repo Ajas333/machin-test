@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import UserHeader from './UserHeader'
 import UserFooter from './UserFooter'
 import Cart from '../../Pages/user/Cart'
+import ProductDisplay from '../../Pages/user/ProductDisplay'
 import LoginForm from '../../Pages/user/LoginForm'
 import SignUpForm from '../../Pages/user/SignUpForm'
 import UserHome from '../../Pages/user/UserHome'
@@ -75,6 +76,7 @@ useEffect(() => {
               <Route path='/user_login' element={<LoginForm/>}></Route>
               <Route path='/user_signup' element={<SignUpForm/>}></Route>
               <Route path='/cart' element={<Cart/>}></Route>
+              <Route path='/product_det/:product_id' element={<ProductDisplay/>}></Route>
             </Routes>
         </div>
         <UserFooter/>

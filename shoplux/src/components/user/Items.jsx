@@ -1,17 +1,19 @@
 import React from 'react'
 import './main.css'
+import { Link } from 'react-router-dom'
 
 
 function Items(props) {
+    
   return (
-   
+   <Link to={`/product_det/${props.id}`}> 
     <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
     <a href="#">
         <img className="p-8 rounded-t-lg" src={props.image} alt="product image" />
     </a>
     <div className="px-5 pb-5">
         <a href="#">
-            <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">{props.name}</h5>
+            <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">{props.name}{props.id}</h5>
         </a>
         <div className="flex items-center mt-2.5 mb-5">
             <div className="flex items-center space-x-1 rtl:space-x-reverse">
@@ -39,6 +41,7 @@ function Items(props) {
         </div>
     </div>
 </div>
+</Link>
   )
 }
 

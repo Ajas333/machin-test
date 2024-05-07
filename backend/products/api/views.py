@@ -16,7 +16,18 @@ class getAllProducts(APIView):
         if products:
             serializer=ProductSerializer(products, many=True)
            
-            print(serializer)
+        
             return Response({"message": "Products retrieved successfully", "products": serializer.data},status=status.HTTP_200_OK)
         else:
             return Response({"message": "No products available"}, status=status.HTTP_204_NO_CONTENT)
+        
+class getProduct(APIView):
+
+    def get(self,request):
+        print("hellooooo")
+        product_id = request.query_params.get('product_id')
+        product=Product.objects.get(id=product_id)
+        serializer=ProductSerializer(product)
+        print(serializer)
+        print(product_id)
+        return Response({"message":"good"})
