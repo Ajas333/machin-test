@@ -51,6 +51,10 @@ function UserHeader() {
           <button onClick={handleLogout} className="px-4 py-2 rounded-full border border-gray-300 hover:bg-gray-100 focus:outline-none">
           Logout
         </button> 
+        <Link to={'/cart'}><img src={cart_icon} alt="Cart Icon" className="w-8 h-8" /> </Link>
+        <div className="absolute top-[-20px] right-[-10px] w-4 h-4 rounded-full bg-red-500 text-white text-center font-bold">
+          {cartCount}
+        </div>
      
         </div> ) : (
         <Link to={'/user_login'}>
@@ -59,10 +63,7 @@ function UserHeader() {
           </button>
         </Link>
         )}
-        <Link to={'/cart'}><img src={cart_icon} alt="Cart Icon" className="w-8 h-8" /> </Link>
-        <div className="absolute top-[-20px] right-[-10px] w-4 h-4 rounded-full bg-red-500 text-white text-center font-bold">
-          {cartCount}
-        </div>
+        
       </div>
     </header>
   )

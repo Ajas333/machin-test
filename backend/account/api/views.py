@@ -1,5 +1,5 @@
 from rest_framework.views import APIView
-from .serializer import UserRegisterSerializer
+from .serializer import UserRegisterSerializer,UserSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -7,6 +7,7 @@ from rest_framework.exceptions import ParseError,AuthenticationFailed
 from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.permissions import IsAuthenticated
 
 
 
@@ -58,4 +59,14 @@ class LoginView(APIView):
                      'isAdmin':user.is_superuser,
                 }
         return Response(content,status=status.HTTP_200_OK)
+    
+class UserDetails(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
+        user = User.objects.get(id=request.user.id)
+       
+        data = UserSerializer(user).data
+            
+        content = data
+        return Response(content)
         
