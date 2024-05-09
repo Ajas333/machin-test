@@ -61,7 +61,7 @@ function UserHeader() {
           
           <div onClick={handleCart} className="header-action-icon-2 relative">
                 <FaCartShopping className="text-xl mr-1" />
-            <span className="pro-count bg-blue-500 text-white rounded-full px-1 py-0.5 text-xs absolute -top-1 -right-1">5</span>
+            
           </div>
           
         {authentication_user.isAuthenticated ? 

@@ -17,6 +17,10 @@ export default {
   plugins: [
     flowbite.plugin(),
   ],
+  darkMode: 'class',
+  theme: {
+    extend: {}
+  }
 }
 
 

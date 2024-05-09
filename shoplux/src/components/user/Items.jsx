@@ -13,15 +13,15 @@ function Items(props) {
     const baseURL = 'http://127.0.0.1:8000';
 
     const authentication_user=useSelector((state) => state.authentication_user);
+    const cart=useSelector((state)=>state.cart);
+    const dispatch=useDispatch();
     const product_id=props.id
-    const token = localStorage.getItem('access')
+    const token = localStorage.getItem('access');
     const handleCartButon = async () =>{
         console.log("helllllllllllooooooooooooooo")
         if(authentication_user.isAuthenticated){
-            console.log("authenticated......")
-            alert (token)
-            console.log("product_id...........",product_id,)
-            console.log("toke..........",token)
+            alert ("item added to cart success")
+    
             const result =await axios.post(`${baseURL}/api/products/add_cart/`,{
                 'product_id': product_id
             },{

@@ -1,14 +1,22 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.exceptions import ParseError,AuthenticationFailed
-from rest_framework_simplejwt.tokens import RefreshToken
+# from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.permissions import IsAuthenticated
-from .serializer import ProductSerializer,CartItemSerializer
-from products.models import Product,Category,Cart,CartItems
+from .serializer import ProductSerializer,CartItemSerializer,OrderItemSerializer
+from products.models import Product,Cart,CartItems,Order,OrderItem
 from django.db.models import Sum
+from datetime import datetime
+import random
+import string
 
+def generate_invoice_number(prefix='INV'):
+    current_date = datetime.now()
+    date_string = current_date.strftime('%Y%m%d')
+    random_string = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+    invoice_number = f'{prefix}-{date_string}-{random_string}'
+    return invoice_number
 
 class getAllProducts(APIView):
     def get(self,request):
@@ -128,6 +136,60 @@ class UpdateCart(APIView):
                 print("error")
 
             return Response({"message": "Cart item not found"}, status=status.HTTP_404_NOT_FOUND)
+
+
+class OrderProduct(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self,request):
+        user=request.user
+        tax=8
+        try:
+            if user:
+                cart=Cart.objects.get(user=user)
+                print(cart)
+                cartitems=CartItems.objects.filter(cart=cart)
+                print(cartitems)
+                order=Order.objects.create(
+                    user=user,
+                    total_price=cart.total_price+tax,
+                    invoice_number = generate_invoice_number()
+                )
+                order.save()
+                for cartitem in cartitems:
+                    orderitem = OrderItem.objects.create(
+                        order=order,
+                        product=cartitem.product,
+                        quantity=cartitem.quantity,
+                        price_at_purchase=cartitem.sub_total
+                    )
+                    orderitem.save()
+                cartitem.delete()
+                cart.delete()
+            serializer=OrderItemSerializer(orderitem, many=True)
+            if serializer.is_valid():
+                serializer.save()
+                
+            else:
+                return Response(serializer.errors,status=status.HTTP_406_NOT_ACCEPTABLE)
+        except:
+            pass
+        
+        return Response({"message": "Order created successfully"}, status=status.HTTP_201_CREATED)
+    
+class DeleteCartItem(APIView):
+    def delete(self,request):
+        cart_item_id=request.data.get('cartItem_id')
+        try:
+            cart_item = CartItems.objects.get(pk=cart_item_id)
+            # cart=Cart.objects.get(cart=cart_item.cart)
+            # cart.total_price-=cart_item.sub_total
+            # cart.save()
+            cart_item.delete()
+            return Response({"message": "Cart item deleted successfully"}, status=status.HTTP_200_OK)
+        except CartItems.DoesNotExist:
+            return Response({"message": "Cart item not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+            
 
     
 
