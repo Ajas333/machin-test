@@ -7,11 +7,13 @@ import LoginForm from '../../Pages/user/LoginForm'
 import SignUpForm from '../../Pages/user/SignUpForm'
 import UserHome from '../../Pages/user/UserHome'
 import {Routes,Route} from 'react-router-dom'
+import PrivateRoute from '../PrivateRout'
 
 import isAuthUser from '../../Utils/isAuthUser'
 import { useSelector,useDispatch } from 'react-redux'
 import { set_Authentication } from '../../Redux/Authentication/authenticationSlice'
 import axios from 'axios'
+import Checkout from '../../Pages/user/Checkout'
 
 function UserWrapper() {
 
@@ -38,15 +40,6 @@ function UserWrapper() {
         'Accept' : 'application/json',
         'Content-Type': 'application/json'
     }})
-      .then(result => {
-          
-          dispatch(
-            set_user_basic_details({
-              name : result.data.username,
-              email : result.data.email
-            })
-          );
-        })
   }
   catch (error) {
     console.log(error);
@@ -75,8 +68,9 @@ useEffect(() => {
               <Route path='/' element={<UserHome/>}></Route>
               <Route path='/user_login' element={<LoginForm/>}></Route>
               <Route path='/user_signup' element={<SignUpForm/>}></Route>
-              <Route path='/cart' element={<Cart/>}></Route>
               <Route path='/product_det/:product_id' element={<ProductDisplay/>}></Route>
+              <Route path='/cart' element={<PrivateRoute ><Cart/></PrivateRoute>}></Route>
+              <Route path='/checkout' element={<PrivateRoute><Checkout/></PrivateRoute>}></Route>
             </Routes>
         </div>
         <UserFooter/>

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import './App.css'
 import UserWrapper from './components/user/UserWrapper'
-
+import AdminArea from './components/admin/AdminArea'
 
 import {BrowserRouter,Routes,Route} from 'react-router-dom'
 import { Provider } from 'react-redux'
@@ -16,7 +16,7 @@ function App() {
       <Provider store={useStore}>
         <Routes>
           <Route path='/*' element={<UserWrapper/>}></Route>
-          {/* <Route path='admincontrol/*' element={<Wrapper/>}></Route> */}
+          <Route path='admincontrol/*' element={<AdminArea/>} ></Route>
         </Routes>
       </Provider>
       </BrowserRouter>

@@ -17,8 +17,6 @@ export const authenticationSlice = createSlice(
       },
   
     }
-
-
 })
 
 export const {set_Authentication} =  authenticationSlice.actions

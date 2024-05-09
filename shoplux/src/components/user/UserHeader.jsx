@@ -1,13 +1,14 @@
 import React from 'react'
 import './main.css'
 import logo from '../../assets/logo.png'
-import cart_icon from '../../assets/cart_icon.png'
 import{ useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { set_Authentication } from '../../Redux/Authentication/authenticationSlice';
 import { useSelector,useDispatch } from 'react-redux';
 import 'flowbite'
+import { FaCartShopping } from "react-icons/fa6";
+import Swal from 'sweetalert2';
 
 
 function UserHeader() {
@@ -19,6 +20,18 @@ function UserHeader() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const handleCart = () =>{
+    if (authentication_user.isAuthenticated){
+      navigate('/cart')
+    }
+    else{
+      Swal.fire({
+        icon: 'info',
+        title: 'Please Login',
+        text: 'Please login first.',
+    });
+    }
+  }
 
   const handleLogout = ()=>{
     localStorage.clear();
@@ -45,6 +58,12 @@ function UserHeader() {
         <Link to={'/kids'} className="hover:text-red-500">Kids</Link>
       </nav>
       <div className="flex items-center gap-4">
+          
+          <div onClick={handleCart} className="header-action-icon-2 relative">
+                <FaCartShopping className="text-xl mr-1" />
+            <span className="pro-count bg-blue-500 text-white rounded-full px-1 py-0.5 text-xs absolute -top-1 -right-1">5</span>
+          </div>
+          
         {authentication_user.isAuthenticated ? 
         ( <div>
           {authentication_user.username}

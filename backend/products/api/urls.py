@@ -7,5 +7,8 @@ from rest_framework_simplejwt.views import (
 
 urlpatterns = [
     path("allProducts/",views.getAllProducts.as_view(),name="all_products"),
-    path("product/",views.getProduct.as_view(),name="product")
+    path("product/",views.getProduct.as_view(),name="product"),
+    path("add_cart/",views.AddCart.as_view(),name="add_cart"),
+    path('getCart/',views.GetCartItem.as_view(),name="getCart"),
+    path('updateCart/',views.UpdateCart.as_view(),name="updateCart"),
 ]
