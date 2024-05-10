@@ -7,9 +7,16 @@ from rest_framework.permissions import IsAuthenticated
 from .serializer import ProductSerializer,CartItemSerializer,OrderItemSerializer,OrderSerializer
 from products.models import Product,Cart,CartItems,Order,OrderItem
 from django.db.models import Sum
+from django.views import View
 from datetime import datetime
 import random
 import string
+from io import BytesIO
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+from django.http import HttpResponse
+from reportlab.lib import colors
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
 
 def generate_invoice_number(prefix='INV'):
     current_date = datetime.now()
@@ -201,7 +208,43 @@ class GetOrder(APIView):
                  return Response({"message": "no orders listed"}, status=status.HTTP_404_NOT_FOUND)
         except Order.DoesNotExist:
             return Response({"message": "no orders listed"}, status=status.HTTP_404_NOT_FOUND)
+        
 
+class GenerateOrderPDF(View):
+    def get(self, request, order_id):
+        print("hellllllllllloooooooooooooo")
+        order = Order.objects.get(pk=order_id)
+
+        # Create response object
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="order_{order.invoice_number}.pdf"'
+
+        # Create PDF document
+        doc = SimpleDocTemplate(response, pagesize=letter)
+        elements = []
+
+        # Order details table
+        data = [
+            ['Invoice Number:', order.invoice_number],
+            ['Total Price:', f'${order.total_price}'],
+            ['Status:', order.status],
+            ['Created At:', order.created_at.strftime('%Y-%m-%d %H:%M:%S')],
+            ['Invoice Date:', order.invoice_date.strftime('%Y-%m-%d')],
+        ]
+
+        table = Table(data, colWidths=[150, 200])
+        table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.lightgreen),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.red),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+            ('BACKGROUND', (0, 1), (-1, -1), colors.bisque),
+        ]))
+        elements.append(table)
+        # Build PDF document
+        doc.build(elements)
+        return response
 
         
             

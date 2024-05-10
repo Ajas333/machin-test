@@ -1,5 +1,6 @@
 from django.urls import path
 from .import views
+from .views import *
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -14,4 +15,6 @@ urlpatterns = [
     path('order_product/',views.OrderProduct.as_view(),name="order_product"),
     path('deleteCartItem/',views.DeleteCartItem.as_view(),name="deleteCartItem/"),
     path('getOrder/',views.GetOrder.as_view(),name="getOrder"),
+    path('orderPdf/<int:order_id>/', GenerateOrderPDF.as_view(), name = 'orderPDF'),
 ]
+

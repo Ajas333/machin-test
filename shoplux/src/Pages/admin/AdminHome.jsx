@@ -40,11 +40,74 @@ function AdminHome() {
       const order = orderList.find(item => item.id === order_id )
       setOrderItem(order)
   }
+
+  const downloadOrderPdf = () => {
+    if (orderItem) {
+      axios.get(baseURL+`/api/products/orderPdf/${orderItem.id}/`, { responseType: 'blob' })
+        .then(response => {
+          const url = window.URL.createObjectURL(new Blob([response.data]));
+          const link = document.createElement('a');
+          link.href = url;
+          link.setAttribute('download', `order_${orderItem.invoice_number}.pdf`);
+          document.body.appendChild(link);
+          link.click();
+        })
+        .catch(error => {
+          console.error('Error downloading PDF:', error);
+        });
+    }
+  };
+
+  const DownloadSalesReport = () =>{
+    
+  }
+
   
   return (
     <>
         {orderItem ? (
-          "tyuihihioohhih"
+
+          <>
+          
+          <table className="min-w-full bg-white border-collapse my-20">
+            <thead className="bg-gray-100 border-b">
+              <tr className="text-xs font-semibold tracking-wider text-left text-gray-600 uppercase border-gray-200">
+                <th scope="col" className="px-6 py-3">
+                  Order Id
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Invoice Date
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Invoice Number
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Amount
+                </th>
+                <th scope="col" className="px-6 py-3">
+                 Status
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Action
+                </th>
+                <th>
+                  <button onClick={()=>setOrderItem("")}>back</button>
+                </th>
+              </tr>
+            </thead>
+            <tbody className="text-sm font-normal text-gray-700">
+           
+                <tr className="border-b border-gray-200" >
+                  <td className="px-6 py-4">{orderItem.id}</td>
+                  <td className="px-6 py-4">{orderItem.created_at}</td>
+                  <td className="px-6 py-4">{orderItem.invoice_number}</td>
+                  <td className="px-6 py-4">{orderItem.total_price}</td>
+                  <td className="px-6 py-4">{orderItem.status}</td>
+                  <td className="px-6 py-4"><button onClick={downloadOrderPdf}>Download invoice</button></td>
+                </tr>
+      </tbody>
+          </table>
+          </>
     ) : <div className='my-16'>
     <header className="bg-gray-200 py-4 px-6 flex justify-between items-center">
     <div className="flex items-center">
@@ -52,8 +115,8 @@ function AdminHome() {
     </div>
     <nav>
       <ul className="flex space-x-4">
-        <li>
-          edrftgyhujio
+        <li onClick={DownloadSalesReport}>
+          SlesReport
         </li>
       </ul>
     </nav>
