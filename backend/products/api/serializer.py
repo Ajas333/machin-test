@@ -19,10 +19,11 @@ class OrderItemSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class OrderSerializer(serializers.ModelSerializer):
-    order_items = OrderItemSerializer(many=True)  # Nested serializer for order items
-
     class Meta:
         model = Order
         fields = '__all__'
+
+
+
 
     

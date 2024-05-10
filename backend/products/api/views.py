@@ -4,7 +4,7 @@ from rest_framework import status
 # from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.permissions import IsAuthenticated
-from .serializer import ProductSerializer,CartItemSerializer,OrderItemSerializer
+from .serializer import ProductSerializer,CartItemSerializer,OrderItemSerializer,OrderSerializer
 from products.models import Product,Cart,CartItems,Order,OrderItem
 from django.db.models import Sum
 from datetime import datetime
@@ -188,6 +188,21 @@ class DeleteCartItem(APIView):
             return Response({"message": "Cart item deleted successfully"}, status=status.HTTP_200_OK)
         except CartItems.DoesNotExist:
             return Response({"message": "Cart item not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+class GetOrder(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self,request):
+        try:
+            orders=Order.objects.all()
+            if orders:
+                serializer=OrderSerializer(orders, many=True)
+                return Response({"message": "orders retreived successfully","orders":serializer.data }, status=status.HTTP_200_OK)
+            else:
+                 return Response({"message": "no orders listed"}, status=status.HTTP_404_NOT_FOUND)
+        except Order.DoesNotExist:
+            return Response({"message": "no orders listed"}, status=status.HTTP_404_NOT_FOUND)
+
+
         
             
 
