@@ -1,5 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from celery.result import AsyncResult
 from rest_framework import status
 # from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.exceptions import AuthenticationFailed
@@ -11,12 +12,15 @@ from django.views import View
 from datetime import datetime
 import random
 import string
+import os
+from django.conf import settings
 from io import BytesIO
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from django.http import HttpResponse
 from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
+from .tasks import generate_order_report
 
 def generate_invoice_number(prefix='INV'):
     current_date = datetime.now()
@@ -188,9 +192,7 @@ class DeleteCartItem(APIView):
         cart_item_id=request.data.get('cartItem_id')
         try:
             cart_item = CartItems.objects.get(pk=cart_item_id)
-            # cart=Cart.objects.get(cart=cart_item.cart)
-            # cart.total_price-=cart_item.sub_total
-            # cart.save()
+            
             cart_item.delete()
             return Response({"message": "Cart item deleted successfully"}, status=status.HTTP_200_OK)
         except CartItems.DoesNotExist:
@@ -245,6 +247,39 @@ class GenerateOrderPDF(View):
         # Build PDF document
         doc.build(elements)
         return response
+    
+# class GenerateOrderCsv(View):
+#     def get(self, request, *args, **kwargs):
+#         print("spet1....................................")
+#         file_name = generate_order_report.delay()
+#         print("step 3......................",file_name)
+#         file_path = os.path.join(settings.MEDIA_ROOT,file_name)
+#         print("file path ",file_path)
+#         with open(file_path, 'rb') as f:
+#             response = HttpResponse(f, content_type='text/csv')
+#             # response['Content-Disposition'] = f'attachment; filename="{file_name}"'
+#             return response
+
+class GenerateOrderCsv(View):
+    def get(self, request, *args, **kwargs):
+        print("Step 1....................................")
+        # Send the task to the queue
+        task = generate_order_report.delay()
+        print("Step 2......................", task.id)  # You can use task.id to track the task in the queue
+
+        # Wait for the task to complete and get the result
+        result = task.get(timeout=30)  # Adjust the timeout as needed
+        print("Task completed with result:", result)
+
+        file_name = result  # The result of the task is the file name
+        print("File name ", file_name)
+        file_path = os.path.join(settings.MEDIA_ROOT, file_name)
+        print("File path ", file_path)
+
+        with open(file_path, 'rb') as f:
+            response = HttpResponse(f.read(), content_type='text/csv')
+            # response['Content-Disposition'] = f'attachment; filename="{file_name}"'
+            return response
 
         
             

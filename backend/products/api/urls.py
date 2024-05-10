@@ -16,5 +16,6 @@ urlpatterns = [
     path('deleteCartItem/',views.DeleteCartItem.as_view(),name="deleteCartItem/"),
     path('getOrder/',views.GetOrder.as_view(),name="getOrder"),
     path('orderPdf/<int:order_id>/', GenerateOrderPDF.as_view(), name = 'orderPDF'),
+    path('csvReport/',GenerateOrderCsv.as_view(),name="GenerateOrderCsv"),
 ]
 

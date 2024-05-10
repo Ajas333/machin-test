@@ -10,6 +10,7 @@ function CartItems(props) {
     sub: props.sub_total,
   });
   console.log(quantity);
+  console.log("cart items inside component.......",props.cartItems)
   const baseURL = "http://127.0.0.1:8000";
   const token = localStorage.getItem("access");
 
@@ -80,6 +81,7 @@ function CartItems(props) {
     }
   };
 
+
   return (
     <>
       {quantity.quantity > 0 ? (
@@ -133,3 +135,4 @@ function CartItems(props) {
 }
 
 export default CartItems;
+

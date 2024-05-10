@@ -45,6 +45,7 @@ function AdminHome() {
     if (orderItem) {
       axios.get(baseURL+`/api/products/orderPdf/${orderItem.id}/`, { responseType: 'blob' })
         .then(response => {
+          console.log("csv respones.....",response)
           const url = window.URL.createObjectURL(new Blob([response.data]));
           const link = document.createElement('a');
           link.href = url;
@@ -59,7 +60,7 @@ function AdminHome() {
   };
 
   const DownloadSalesReport = () =>{
-    axios.get('report_csv/', { responseType: 'blob' })
+    axios.get('/api/products/csvReport/', { responseType: 'blob' })
             .then(response => {
               console.log("response csv:",response.data)
                 const url = window.URL.createObjectURL(new Blob([response.data]));
@@ -78,9 +79,7 @@ function AdminHome() {
   return (
     <>
         {orderItem ? (
-
           <>
-          
           <table className="min-w-full bg-white border-collapse my-20">
             <thead className="bg-gray-100 border-b">
               <tr className="text-xs font-semibold tracking-wider text-left text-gray-600 uppercase border-gray-200">

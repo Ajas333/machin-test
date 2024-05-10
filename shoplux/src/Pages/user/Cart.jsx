@@ -4,6 +4,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
+
 function Cart() {
   const [cartItems, setCartItems] = useState([]);
   const [greeting, setGreeting] = useState('');
@@ -99,6 +100,7 @@ function Cart() {
                     quantity={item.quantity}
                     setIsItem={setIsItem}
                     setTotal={setTotal}
+                    
                   />
                 );
               })}
