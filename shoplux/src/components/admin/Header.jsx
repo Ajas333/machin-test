@@ -1,12 +1,13 @@
 import React from 'react'
 import logo from '../../assets/logo.png'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useSelector,useDispatch } from 'react-redux';
 import { set_Authentication } from '../../Redux/Authentication/authenticationSlice';
 
 function Header() {
   const authentication_user=useSelector((state) => state.authentication_user);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   console.log(authentication_user.username)
   const handleLogout = ()=>{
     localStorage.clear();
@@ -17,7 +18,7 @@ function Header() {
         isAdmin: false
       })
     );
-    navigate("/admincontrol/admin_login");
+    navigate("/");
   };
   
   return (
@@ -36,8 +37,13 @@ function Header() {
         </button> 
      
         </div> ) : (
-        ""
+         <Link to={'/user_login'}>
+         <button className="px-4 py-2 rounded-full border border-gray-300 hover:bg-gray-100 focus:outline-none">
+           User Login
+         </button>
+        </Link>
         )}
+        
       </div>
     </header>
   )

@@ -59,7 +59,7 @@ function AdminArea() {
         <Route path='/' element={<AdminPrivateRoute><AdminHome/></AdminPrivateRoute>}></Route>
         <Route path='/admin_login' element={<Login/>} ></Route>
       </Routes>
-    <Footer/>
+
     </div>
   )
 }

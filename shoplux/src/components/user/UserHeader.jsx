@@ -72,11 +72,18 @@ function UserHeader() {
         </button> 
      
         </div> ) : (
-        <Link to={'/user_login'}>
+       <>
+         <Link to={'/user_login'}>
           <button className="px-4 py-2 rounded-full border border-gray-300 hover:bg-gray-100 focus:outline-none">
             Login
           </button>
         </Link>
+         <Link to={'admincontrol/'}>
+          <button className="px-4 py-2 rounded-full border border-gray-300 hover:bg-gray-100 focus:outline-none">
+            Admin
+          </button>
+        </Link>
+       </>
         )}
         
       </div>
